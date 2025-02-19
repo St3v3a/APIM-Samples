@@ -4,14 +4,24 @@
 
 Llama Index is used to demonstrate a local file indexing and search application that uses vector embeddings to enable semantic search capabilities for your local files.
 
-In this case confiured to use APIM Gateway API (OpenAI 2024-120-21 spec)
+This application is configured to use Azure API Management (APIM) Gateway API (OpenAI 2024-10-21 spec) to demonstrate integration with Azure OpenAI services through APIM.
+
+The application:
+- Uses APIM API endpoints and keys configured in `.env`
+- Uses models defined in `app.py` (these can be optionally moved to `.env`)
+- Processes documents from the `\data` folder and creates vector embeddings
+- Provides an interactive interface for asking questions about the processed documents
+- Maintains persistent vector storage for quick subsequent access
 
 ## Features
 
-- Local file indexing
-- Semantic search using vector embeddings
+- Local file indexing with vector embeddings
+- Interactive question-answering interface
+- Semantic search capabilities
 - Configurable file type support
-- Fast search results
+- Persistent vector storage
+- Clean interface with formatted output
+- Option to reset vector storage
 
 ## Installation
 
@@ -19,36 +29,24 @@ In this case confiured to use APIM Gateway API (OpenAI 2024-120-21 spec)
 
 - Python 3.8 or higher
 - pip (Python package installer)
+- Azure APIM subscription with OpenAI services configured
 
 ### Setup
 
 1. Clone the repository:
-
 ```bash
 git clone [repository-url]
 cd lindex
 ```
 
-2. Create and activate virtual enviornment (conda, venv, UV etc.)
-3. Install dependencies:
+2. Create and activate a virtual environment (conda, venv, UV etc.)
 
+3. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-## Configuration
-
-### Vector Storage
-
-The application stores vector embeddings in a local vector database within the project directory:
-
-- **Storage Location**: `./vectors/` (in project root)
-- **Storage Files**:
-  - `default__vector_store.json`: Contains the vector embeddings
-  - `docstore.json`: Document metadata and content
-  - `index_store.json`: Index configuration and metadata
-  - `graph_store.json`: Graph relationships
-  - `image__vector_store.json`: Image vector data (if applicable)
+4. Set up your environment variables (see Environment Variables section)
 
 ### Environment Variables
 
@@ -66,95 +64,78 @@ API-VERSION=<apim openai api version>  # e.g. 2024-10-21
 
 Note: Do not use quotes in any of the environment variables.
 
-### Azure OpenAI Configuration
+### Data Preparation
 
-The application uses Azure OpenAI for:
-
-- Text embeddings (Ada 002)
-- Query processing (GPT-4)
-
-All Azure OpenAI configuration is now managed through environment variables in your `.env` file.
-
-### Tuning Parameters
-
-#### Indexing Parameters
-
-- `chunk_size`: 512 (number of tokens per text chunk)
-- `overlap_size`: 50 (number of overlapping tokens between chunks)
-- `batch_size`: 32 (batch size for vector processing)
-
-#### Search Parameters
-
-- `top_k`: 5 (number of results to return)
-- `similarity_threshold`: 0.7 (minimum similarity score for results)
-
-#### Vector Embedding
-
-- Model: SentenceTransformers
-- Embedding Dimension: 384
-- Distance Metric: Cosine Similarity
+1. Create a `data` directory in the project root (if it doesn't exist)
+2. Place your documents in the `data` directory
+3. Supported file types include: txt, pdf, md, etc.
 
 ## Usage
 
 ### Running the Application
 
+1. Start the application:
 ```bash
-# Run the application
 python app.py
-
-# The application will:
-# 1. Create a vectors/ directory if it doesn't exist
-# 2. Load existing index if available, or create new one
-# 3. Process the documents in data/ directory
-# 4. Save vectors for future use
 ```
 
-### Basic Commands
+2. Vector Storage Management:
+   - On startup, you'll be asked if you want to remove existing vector storage
+   - Choose 'yes' to start fresh (useful if your data has changed)
+   - Choose 'no' to use existing vectors (faster if data hasn't changed)
 
-```bash
-# Index files in a directory
-lindex index /path/to/directory
+3. The application will then:
+   - Load existing index (if available and you chose 'no')
+   - Or create a new index by processing documents in the `data/` directory
 
-# Search through indexed files
-lindex search "your search query"
+4. Interactive Usage:
+   - Enter your questions when prompted
+   - View the sources and formatted answers for each question
+   - Press Enter to ask another question
+   - Press Ctrl+C to exit the application
 
-# List indexed files
-lindex list
+### Vector Storage
 
-# Remove files from index
-lindex remove /path/to/file
-```
+The application stores vector embeddings in a local vector database:
+- Location: `./vectors/` directory
+- Contents:
+  - Vector embeddings
+  - Document metadata
+  - Index configuration
+  - Search optimization data
 
-### Advanced Configuration
+### Azure OpenAI Integration
 
-You can customize the behavior by modifying `config.yaml`:
+The application uses Azure OpenAI through APIM for:
+- Text embeddings (Ada 002)
+- Query processing (GPT-4)
 
-```yaml
-storage:
-  vector_path: "./vectors"
-  metadata_path: "./metadata.db"
-
-indexing:
-  chunk_size: 512
-  overlap_size: 50
-  batch_size: 32
-  file_types: [".txt", ".md", ".py", ".js", ".html", ".csv"]
-
-search:
-  top_k: 5
-  similarity_threshold: 0.7
-```
+All Azure OpenAI configuration is managed through environment variables in your `.env` file.
 
 ## Performance Considerations
 
-- The application uses FAISS for efficient similarity search
-- Memory usage scales with the number of indexed documents
-- Recommended hardware: 8GB RAM minimum for optimal performance
+- First-time indexing may take longer as documents are processed
+- Subsequent runs are faster using stored vectors
+- Vector storage can be reset if document content changes
+- Query response time depends on:
+  - Document size
+  - Query complexity
+  - Azure OpenAI service response time
 
-## Contributing
+## Troubleshooting
 
-Contributions are welcome! Please read our contributing guidelines before submitting pull requests.
+Common issues and solutions:
+1. Environment Variables:
+   - Ensure `.env` file exists and contains all required variables
+   - Check for any typos in API keys or URLs
+   - Don't use quotes in variable values
 
-## License
+2. Data Processing:
+   - Ensure documents are in the `data/` directory
+   - Check file permissions
+   - Verify supported file formats
 
-[Specify License]
+3. Vector Storage:
+   - If results seem incorrect, try removing existing vectors
+   - Ensure enough disk space for vector storage
+   - Check write permissions in the vectors directory
