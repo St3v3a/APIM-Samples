@@ -2,7 +2,5 @@
 
 ## The code is organized into the following folders:
 
-- `lindix`: This folder contains example llamaindex code
-- 
-
-
+- `lindix`: This folder contains example llama index code tuned when using APIM Gateway with OpenAI API
+-
