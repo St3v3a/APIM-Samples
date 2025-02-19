@@ -14,8 +14,8 @@ logging.basicConfig(
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
 api_key = os.getenv("API-KEY")
-azure_endpoint = "https://apimeuw1.azure-api.net/sa-works-oai-1/"
-api_version = "2024-10-21"
+azure_endpoint = os.getenv("AZURE-APIM-URL")
+api_version = os.getenv("API-VERSION")
 
 llm = AzureOpenAI(
     model="gpt-4o",

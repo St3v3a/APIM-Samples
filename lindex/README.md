@@ -1,9 +1,13 @@
 # Lindex - Local Index Search Application
 
 ## Overview
-Lindex is a local file indexing and search application that uses vector embeddings to enable semantic search capabilities for your local files.
+
+Llama Index is used to demonstrate a local file indexing and search application that uses vector embeddings to enable semantic search capabilities for your local files.
+
+In this case confiured to use APIM Gateway API (OpenAI 2024-120-21 spec)
 
 ## Features
+
 - Local file indexing
 - Semantic search using vector embeddings
 - Configurable file type support
@@ -12,17 +16,22 @@ Lindex is a local file indexing and search application that uses vector embeddin
 ## Installation
 
 ### Prerequisites
+
 - Python 3.8 or higher
 - pip (Python package installer)
 
 ### Setup
+
 1. Clone the repository:
+
 ```bash
 git clone [repository-url]
 cd lindex
 ```
 
-2. Install dependencies:
+2. Create and activate virtual enviornment (conda, venv, UV etc.)
+3. Install dependencies:
+
 ```bash
 pip install -r requirements.txt
 ```
@@ -30,6 +39,7 @@ pip install -r requirements.txt
 ## Configuration
 
 ### Vector Storage
+
 The application stores vector embeddings in a local vector database within the project directory:
 
 - **Storage Location**: `./vectors/` (in project root)
@@ -41,34 +51,45 @@ The application stores vector embeddings in a local vector database within the p
   - `image__vector_store.json`: Image vector data (if applicable)
 
 ### Environment Variables
-Create a `.env` file in the project root with the following:
-```
-API-KEY=your_azure_openai_api_key
+
+1. Copy the example environment file:
+```bash
+cp .env.example .env
 ```
 
+2. Edit the `.env` file and update the following variables with your values:
+```plaintext
+API-KEY=<your apim api key>
+AZURE-APIM-URL=<Azure APIM URL>  # e.g. https://xxxxx.azure-api.net/our-oai-1
+API-VERSION=<apim openai api version>  # e.g. 2024-10-21
+```
+
+Note: Do not use quotes in any of the environment variables.
+
 ### Azure OpenAI Configuration
+
 The application uses Azure OpenAI for:
+
 - Text embeddings (Ada 002)
 - Query processing (GPT-4)
 
-Configure the endpoints in `app.py`:
-```python
-azure_endpoint = "https://apimeuw1.azure-api.net/sa-works-oai-1/"
-api_version = "2024-10-21"
-```
+All Azure OpenAI configuration is now managed through environment variables in your `.env` file.
 
 ### Tuning Parameters
 
 #### Indexing Parameters
+
 - `chunk_size`: 512 (number of tokens per text chunk)
 - `overlap_size`: 50 (number of overlapping tokens between chunks)
 - `batch_size`: 32 (batch size for vector processing)
 
 #### Search Parameters
+
 - `top_k`: 5 (number of results to return)
 - `similarity_threshold`: 0.7 (minimum similarity score for results)
 
 #### Vector Embedding
+
 - Model: SentenceTransformers
 - Embedding Dimension: 384
 - Distance Metric: Cosine Similarity
@@ -76,6 +97,7 @@ api_version = "2024-10-21"
 ## Usage
 
 ### Running the Application
+
 ```bash
 # Run the application
 python app.py
@@ -88,6 +110,7 @@ python app.py
 ```
 
 ### Basic Commands
+
 ```bash
 # Index files in a directory
 lindex index /path/to/directory
@@ -103,6 +126,7 @@ lindex remove /path/to/file
 ```
 
 ### Advanced Configuration
+
 You can customize the behavior by modifying `config.yaml`:
 
 ```yaml
@@ -122,12 +146,15 @@ search:
 ```
 
 ## Performance Considerations
+
 - The application uses FAISS for efficient similarity search
 - Memory usage scales with the number of indexed documents
 - Recommended hardware: 8GB RAM minimum for optimal performance
 
 ## Contributing
+
 Contributions are welcome! Please read our contributing guidelines before submitting pull requests.
 
 ## License
+
 [Specify License]
