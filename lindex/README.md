@@ -2,9 +2,9 @@
 
 ## Overview
 
-Llama Index is used to demonstrate a local file indexing and search application that uses vector embeddings to enable semantic search capabilities for your local files. 
+Llama Index is used to demonstrate a local file indexing and search application that uses vector embeddings to enable semantic search capabilities for your local files.
 
-**Fork this repo if you wish to make changes - code is provided as is without warrenty** 
+**Fork this repo if you wish to make changes - code is provided as is without warrenty**
 
 This application is configured to use Azure API Management (APIM) Gateway API (OpenAI 2024-10-21 spec) to demonstrate integration with Azure OpenAI services through APIM.
 
@@ -12,10 +12,9 @@ The application:
 
 - Uses APIM API endpoints and keys configured in `.env`
 - Uses models defined in `app.py` (these can be optionally moved to `.env`)
-- Processes documents from the `\data` folder and creates vector embeddings
+- Processes documents from the `\data` folder and creates vector embeddings  (add / remove content here)
 - Provides an interactive interface for asking questions about the processed documents
 - Maintains persistent vector storage for quick subsequent access
-
 
 ## Features
 
